@@ -1,8 +1,10 @@
 import http.client
 import json
 
+proxy = "localhost:3333"
+
 def spotify_recently_played():
-  conn = http.client.HTTPConnection("localhost:3333")
+  conn = http.client.HTTPConnection(proxy)
   conn.request("GET", "/~spotify/v1/me/player/recently-played")
   res = conn.getresponse()
   data = json.load(res)
@@ -10,43 +12,32 @@ def spotify_recently_played():
   items = data["items"]
   for item in items:
     track = item["track"]
-
-    spotify_url = track["external_urls"]["spotify"]
-
     row = [
         track["name"],
         ", ".join(list(map(lambda artist: artist["name"], track["artists"]))),
         track["uri"],
-        spotify_url]
+        track["external_urls"]["spotify"]]
     grid.append(row)
   return grid
 
-grid = spotify_recently_played()
-print(grid)
-
-print(len(grid))
-
-sheet = "1TyzzvZO5ZBzkIkRx1AmX1CYaEG1OPyQlPFGV241-Zow"
-
-conn = http.client.HTTPConnection("localhost:3333")
-
-p = {
-    "range": "A1:D20",
+def save_sheet(sheet, grid):
+  range = "A1:D20" # compute this!
+  conn = http.client.HTTPConnection(proxy)
+  body = {
+    "range": range,
     "majorDimension": "ROWS",
     "values": grid
-}
+  }
+  headers = { 'content-type': "application/json" }
+  conn.request("PUT",
+                "/~sheets/v4/spreadsheets/"+sheet+"/values/" + range + "?valueInputOption=RAW", 
+                json.dumps(body),
+                headers)
+  res = conn.getresponse()
+  data = res.read()
+  print(data.decode("utf-8"))
 
-p2 = json.dumps(p)
-print(p2)
+grid = spotify_recently_played()
 
-headers = { 'content-type': "application/json" }
-
-conn.request("PUT",
-              "/~sheets/v4/spreadsheets/"+sheet+"/values/A1:D20?valueInputOption=RAW", 
-              p2,
-              headers)
-
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))
+sheet = "1TyzzvZO5ZBzkIkRx1AmX1CYaEG1OPyQlPFGV241-Zow"
+save_sheet(sheet, grid)
