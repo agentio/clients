@@ -1,14 +1,16 @@
+#!/usr/bin/python
+
 import http.client
 import json
 
-conn = http.client.HTTPConnection("localhost:3333")
+proxy = "io"
+
+conn = http.client.HTTPConnection(proxy)
 
 p = {
     "range": "A2:A2",
     "majorDimension": "ROWS",
-    "values": [
-        [12]
-    ]
+    "values": [[11]]
 }
 
 p2 = json.dumps(p)

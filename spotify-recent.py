@@ -1,7 +1,9 @@
+#!/usr/bin/python 
+
 import http.client
 import json
 
-proxy = "localhost:3333"
+proxy = "io"
 
 def spotify_recently_played():
   conn = http.client.HTTPConnection(proxy)
