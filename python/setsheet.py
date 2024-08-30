@@ -1,11 +1,9 @@
 #!/usr/bin/python
 
-import http.client
+import agent
 import json
 
-proxy = "io"
-
-conn = http.client.HTTPConnection(proxy)
+conn = agent.io()
 
 p = {
     "range": "A2:A2",

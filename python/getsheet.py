@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
-import http.client
+import agent
 import json
-
-proxy = "io"
 
 def cellValue(cell):
   v = cell["effectiveValue"]
@@ -24,7 +22,7 @@ def grid(data):
   return g
 
 def sheet(id):
-  conn = http.client.HTTPConnection(proxy)
+  conn = agent.io()
   conn.request("GET", "/~sheets/v4/spreadsheets/"+id+"?includeGridData=true")
   res = conn.getresponse()
   data = json.load(res)

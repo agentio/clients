@@ -1,12 +1,10 @@
 #!/usr/bin/python 
 
-import http.client
+import agent
 import json
 
-proxy = "io"
-
 def spotify_recently_played():
-  conn = http.client.HTTPConnection(proxy)
+  conn = agent.io()
   conn.request("GET", "/~spotify/v1/me/player/recently-played")
   res = conn.getresponse()
   data = json.load(res)
@@ -24,7 +22,7 @@ def spotify_recently_played():
 
 def save_sheet(sheet, grid):
   range = "A1:D20" # compute this!
-  conn = http.client.HTTPConnection(proxy)
+  conn = agent.io()
   body = {
     "range": range,
     "majorDimension": "ROWS",

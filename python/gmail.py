@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
-import http.client
+import agent
 import json
-
-proxy = "io"
 
 def messages(conn):
   conn.request("GET", "/~gmail/v1/users/me/messages")
@@ -16,14 +14,14 @@ def message(conn, id):
   res = conn.getresponse()
   return json.load(res)
 
-conn = http.client.HTTPConnection(proxy)
+conn = agent.io()
 for m in messages(conn):
   data = message(conn, m["id"])
   payload = data["payload"]
   headers = payload["headers"]
   for header in headers:
     if header["name"] == "Subject":
-    	print(header["value"])
+      print(header["value"])
     elif header["name"] == "From":
-    	print(header["value"])
+      print(header["value"])
   print("--")
