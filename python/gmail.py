@@ -4,13 +4,13 @@ import agent
 import json
 
 def messages(conn):
-  conn.request("GET", "/~gmail/v1/users/me/messages")
+  conn.request("GET", "/~gmail/gmail/v1/users/me/messages")
   res = conn.getresponse()
   data = json.load(res)
   return data["messages"]
 
 def message(conn, id):
-  conn.request("GET", "/~gmail/v1/users/me/messages/"+id)
+  conn.request("GET", "/~gmail/gmail/v1/users/me/messages/"+id)
   res = conn.getresponse()
   return json.load(res)
 
